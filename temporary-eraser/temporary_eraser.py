@@ -1,5 +1,5 @@
 from krita import *
-from .settingsmenu import SettingsMenu
+from .settings_dialog import SettingsDialog
 
 class TemporaryEraser(Extension):
 
@@ -11,8 +11,8 @@ class TemporaryEraser(Extension):
 
     def createActions(self, window):
         action = window.createAction("temperaser", "Configure a Temporary Eraser Preset", "tools/scripts")
-        action.triggered.connect(self.openSettingsMenu)
+        action.triggered.connect(self.openSettingsDialog)
     
-    def openSettingsMenu(self):
-        menu = SettingsMenu()
+    def openSettingsDialog(self):
+        menu = SettingsDialog()
         menu.exec()

@@ -1,4 +1,4 @@
 from krita import *
-from .temporaryeraser import TemporaryEraser
+from .temporary_eraser import TemporaryEraser
 
 Krita.instance().addExtension(TemporaryEraser(Krita.instance()))
