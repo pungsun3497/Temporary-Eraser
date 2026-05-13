@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Service
 ServiceTypes=Krita/PythonPlugin
-X-KDE-Library=temporary-eraser
+X-KDE-Library=temporary_eraser
 X-Python-2-Compatible=false
 X-Krita-Manual=myPluginManual.html
 Name=Temporary Eraser

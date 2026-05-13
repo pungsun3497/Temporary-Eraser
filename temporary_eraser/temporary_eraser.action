@@ -3,16 +3,16 @@
     <Actions category="Scripts">
         <text>Temporary Eraser</text>
 
-        <Action name="eraser">
+        <Action name="temporaryEraserToggle">
         <icon></icon>
-        <text>Eraser</text>
+        <text>Temporary Eraser(Hold)</text>
         <whatsThis></whatsThis>
         <toolTip></toolTip>
         <iconText></iconText>
         <activationFlags>10000</activationFlags>
         <activationConditions>0</activationConditions>
         <shortcut>ctrl+alt+shift+E</shortcut>
-        <isCheckable>false</isCheckable>
+        <isCheckable>true</isCheckable>
         <statusTip></statusTip>
         </Action>
         
