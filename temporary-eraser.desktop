@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+ServiceTypes=Krita/PythonPlugin
+X-KDE-Library=temporary-eraser
+X-Python-2-Compatible=false
+X-Krita-Manual=myPluginManual.html
+Name=Temporary Eraser
+Comment=Krita plugin to allow temporary changes to a eraser preset (or any other brush preset).
