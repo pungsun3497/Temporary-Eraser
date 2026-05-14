@@ -1,31 +1,66 @@
 from krita import *
-from .settings_dialog import SettingsDialog
 from PyQt5.QtCore import *
+from .settings_dialog import SettingsDialog
+from .key_release_filter import KeyReleaseFilter
 
 
-class KeyFilter(QObject):
+class TemporaryEraser(Extension):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.key_release_filter = KeyReleaseFilter()
         self.is_swapped = False
 
 
-    def eventFilter(self, obj, event):
-        print(event)
+    def setup(self):
+        notifier = Krita.instance().notifier()
+        notifier.windowCreated.connect(self.installFilter)
 
-        if event.type() == QEvent.KeyPress:
-            if event.key() == Qt.Key_Z and not event.isAutoRepeat():
-                self.toggleEraser(True)
-                return True
-        elif event.type() == QEvent.KeyRelease:
-            if event.key() == Qt.Key_Z and not event.isAutoRepeat():
-                self.toggleEraser(False)
-                return True
-        return False
+
+    def installFilter(self):
+        Krita.instance().activeWindow().qwindow().installEventFilter(self.key_release_filter)
+
+
+    def createActions(self, window):
+        self.settings_action = window.createAction("temporaryEraserSettings", "Configure Temporary Eraser Preset", "tools/scripts")
+        self.settings_action.triggered.connect(self.openSettingsDialog)
+
+        self.hold_action = window.createAction("temporaryEraserHold", "", "")
+        self.hold_action.triggered.connect(self.holdEraser)
+    
+
+    def openSettingsDialog(self):
+        menu = SettingsDialog()
+        menu.exec()
+    
+
+    def holdEraser(self):
+        self.toggleEraser(True)
+
+        # parse keys
+        keys = set()
+
+        action_key_seq = self.hold_action.shortcut()
+        for action_key_comb in action_key_seq:
+            pure_key = action_key_comb & ~int(Qt.KeyboardModifier.KeyboardModifierMask)
+
+            keys.add(pure_key)
+
+            if action_key_comb & Qt.KeyboardModifier.ControlModifier:
+                keys.add(Qt.Key.Key_Control)
+            if action_key_comb & Qt.KeyboardModifier.AltModifier:
+                keys.add(Qt.Key.Key_Alt)
+            if action_key_comb & Qt.KeyboardModifier.ShiftModifier:
+                keys.add(Qt.Key.Key_Shift)
+        
+        self.key_release_filter.setCallback(keys, self.releaseEraser)
+    
+
+    def releaseEraser(self):
+        self.toggleEraser(False)
     
 
     def toggleEraser(self, checked):
-        print("Toggle Eraser")
         view = Krita.instance().activeWindow().activeView()
         if not view:
             return
@@ -46,33 +81,4 @@ class KeyFilter(QObject):
                 view.setCurrentBrushPreset(self.old_preset)
                 self.old_preset = None
                 self.is_swapped = False
-
-
-class TemporaryEraser(Extension):
-
-    def __init__(self, parent):
-        super().__init__(parent)
-        self.key_filter = KeyFilter()
-
-
-    def setup(self):
-        notifier = Krita.instance().notifier()
-        notifier.windowCreated.connect(self.installFilter)
-
-
-    def installFilter(self):
-        Krita.instance().activeWindow().qwindow().installEventFilter(self.key_filter)
-
-
-    def createActions(self, window):
-        settings_action = window.createAction("temporaryEraserSettings", "Configure Temporary Eraser Preset", "tools/scripts")
-        settings_action.triggered.connect(self.openSettingsDialog)
-
-        #toggle_action = window.createAction("temporaryEraserToggle", "", "")
-        #toggle_action.triggered.connect(self.toggleEraser)
-    
-
-    def openSettingsDialog(self):
-        menu = SettingsDialog()
-        menu.exec()
     

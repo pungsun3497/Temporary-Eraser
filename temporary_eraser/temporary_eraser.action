@@ -3,7 +3,7 @@
     <Actions category="Scripts">
         <text>Temporary Eraser</text>
 
-        <Action name="temporaryEraserToggle">
+        <Action name="temporaryEraserHold">
         <icon></icon>
         <text>Temporary Eraser(Hold)</text>
         <whatsThis></whatsThis>
