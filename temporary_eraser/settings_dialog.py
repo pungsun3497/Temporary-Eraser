@@ -11,7 +11,7 @@ class SettingsDialog(QDialog):
         self.all_presets = self.getAllPresets()
         self.selected_preset_name = Krita.instance().readSetting("", "TemporaryEraser", None)
 
-        self.init_UI()
+        self.initUI()
     
 
     def getAllPresets(self):
