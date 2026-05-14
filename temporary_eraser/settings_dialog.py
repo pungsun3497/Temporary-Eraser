@@ -8,13 +8,13 @@ class SettingsDialog(QDialog):
     def __init__(self):
         super().__init__()
        
-        self.all_presets = self.get_all_presets()
+        self.all_presets = self.getAllPresets()
         self.selected_preset_name = Krita.instance().readSetting("", "TemporaryEraser", None)
 
-        self.initUI()
+        self.init_UI()
     
 
-    def get_all_presets(self):
+    def getAllPresets(self):
         all_presets = Krita.instance().resources("preset")
         return all_presets
 
@@ -39,7 +39,7 @@ class SettingsDialog(QDialog):
         self.preview_label = QLabel()
         self.preview_label.setStyleSheet("font-weight: bold; font-size: 14px;")
 
-        self.update_preview()
+        self.updatePreview()
         
         self.preview_layout.addWidget(self.preview_icon)
         self.preview_layout.addWidget(self.preview_label)
@@ -63,7 +63,7 @@ class SettingsDialog(QDialog):
             item = QListWidgetItem(thumbnail, name)
             self.list_widget.addItem(item)
         
-        self.list_widget.itemClicked.connect(self.select_preset)
+        self.list_widget.itemClicked.connect(self.selectPreset)
         self.layout.addWidget(self.list_widget)
 
         # -----------------------------------------
@@ -76,7 +76,7 @@ class SettingsDialog(QDialog):
         self.layout.addWidget(self.button_box)
     
 
-    def update_preview(self):
+    def updatePreview(self):
         if self.selected_preset_name:
             self.preview_icon.setPixmap(QPixmap.fromImage(self.all_presets[self.selected_preset_name].image()).scaled(64, 64))
             self.preview_label.setText(self.selected_preset_name)
@@ -85,9 +85,9 @@ class SettingsDialog(QDialog):
             self.preview_label.setText("Not Selected")
 
 
-    def select_preset(self, item):
+    def selectPreset(self, item):
         self.selected_preset_name = item.text()
-        self.update_preview()
+        self.updatePreview()
 
 
     def accept(self):
