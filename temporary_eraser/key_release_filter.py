@@ -20,8 +20,12 @@ class KeyReleaseFilter(QObject):
 
     def eventFilter(self, obj, event):
         if event.type() == QEvent.KeyRelease:
+            if event.isAutoRepeat():
+                return False
+            
             for key in self.keys:
                 if key == event.key() and callable(self.callback):
                     self.callback()
+                    self.clearCallback()
                     
         return False

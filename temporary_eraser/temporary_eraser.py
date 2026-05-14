@@ -16,6 +16,8 @@ class TemporaryEraser(Extension):
         notifier = Krita.instance().notifier()
         notifier.windowCreated.connect(self.installFilter)
 
+        print("Complete Setup for Temporary Eraser")
+
 
     def installFilter(self):
         Krita.instance().activeWindow().qwindow().installEventFilter(self.key_release_filter)
@@ -35,6 +37,8 @@ class TemporaryEraser(Extension):
     
 
     def holdEraser(self):
+        if self.is_swapped: return
+
         self.toggleEraser(True)
 
         # parse keys
@@ -60,12 +64,12 @@ class TemporaryEraser(Extension):
         self.toggleEraser(False)
     
 
-    def toggleEraser(self, checked):
+    def toggleEraser(self, enable):
         view = Krita.instance().activeWindow().activeView()
         if not view:
             return
         
-        if checked:
+        if enable:
             self.eraser_name = Krita.instance().readSetting("", "TemporaryEraser", None)
             if not self.eraser_name:
                 return
